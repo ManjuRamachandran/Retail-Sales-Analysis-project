@@ -126,22 +126,22 @@ retail-sales-analysis/
 ## 🖥️ Power BI Dashboard — 3 Pages
 
 ### Page 1 — Sales Overview
-- 5 KPI Cards: Total Sales, Total Profit, Total Orders, Profit Margin %, Avg Order Value
+- 5 Cards: Total Sales, Total Profit, Total Orders, Profit Margin %, Avg Order Value
 - Clustered Bar: Sales & Profit by Region
 - Donut Chart: Sales by Category
 - Horizontal Bar: Top 10 Cities by Sales
 
 ### Page 2 — Profitability Analysis
-- 3 KPI Cards: Total Profit, Profit Margin %, Profit per Order
+- 3 Cards: Total Profit, Profit Margin %, Profit per Order
 - Waterfall Chart: Profit by Sub-Category (RED = loss, GREEN = profit)
 - 100% Stacked Bar: Profit Margin by Category
 - Scatter Plot: Discount vs Profit (with trend line)
 
-### Page 3 — Customer & Geographic Analysis
-- 4 KPI Cards: Consumer Sales %, Top Region, Worst Loss State, Avg Discount
+### Page 3 — Customer & Segment Analysis
+- 4 Cards: Consumer Sales %, Top Region, Worst Loss State, Avg Discount
 - Donut Chart: Sales % by Segment
 - 100% Stacked Bar: Ship Mode by Segment
-- US Filled Map: States coloured by profit/loss (RED = loss, GREEN = profit)
+- Bar Chart: Top Loss States by Profit
 
 ---
 
@@ -161,10 +161,6 @@ python python/01_data_cleaning.py
 ```
 
 ---
-
-## 🙋 About This Project
-
-Built as a portfolio project to demonstrate end-to-end data analysis skills using Python, SQL, and Power BI — targeted at Data Analyst roles at MNC companies like LTIMindtree, TCS, Infosys, and Accenture.
 
 ---
 
