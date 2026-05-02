@@ -1,0 +1,13 @@
+SEGMENT,SHIP_MODE,TOTAL_SALES
+Consumer,Standard Class,3085
+Consumer,Second Class,1020
+Consumer,Same Day,317
+Consumer,First Class,769
+Corporate,Standard Class,1812
+Corporate,Second Class,609
+Corporate,Same Day,114
+Corporate,First Class,485
+Home Office,Standard Class,1071
+Home Office,Second Class,316
+Home Office,Same Day,112
+Home Office,First Class,284

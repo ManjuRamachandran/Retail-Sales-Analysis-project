@@ -1,0 +1,146 @@
+SELECT * FROM RETAIL_DATA
+/
+-----1) WHICH REGION HAS THE HIGHEST SALES AND PROFIT ?
+
+SELECT REGION,
+ROUND (SUM(SALES),2) AS TOTAL_SALES,
+ROUND (SUM(PROFIT),2) AS TOTAL_PROFIT,
+ROUND((SUM(PROFIT)/ SUM(SALES))*100,2) AS PROFIT_MARGIN_pCT
+FROM RETAIL_DATA
+GROUP BY REGION
+ORDER BY TOTAL_SALES DESC
+---- identify which region contributes the most to revenue and profit to guide where the business should invest more resources
+/
+----2) WHICH PRODUCT CATEGORY IS MOST AND LEAST PROFITABLE ?
+
+SELECT CATEGORY,
+ROUND(SUM(SALES), 2) AS TOTAL_SALES,
+ROUND(SUM(PROFIT), 2) AS TOTAL_PROFIT,
+ROUND((SUM(PROFIT) / SUM(SALES)) * 100, 2) AS PROFIT_MARGIN_PCT
+FROM RETAIL_DATA
+GROUP BY CATEGORY
+ORDER BY TOTAL_PROFIT ASC;
+----- Determines which product category drives most profit and which one underperforms,
+----- so the business can prioritize product lines.
+/
+-----3) WHICH SUBCATEGORY CAUSE LOSSES ?
+
+SELECT SUB_CATEGORY,
+ROUND (SUM(PROFIT),2) AS TOTAL_PROFIT
+FROM RETAIL_DATA
+GROUP BY SUB_CATEGORY
+HAVING SUM(PROFIT) < 0
+ORDER BY TOTAL_PROFIT ASC
+---- Find product sub category where the business is loosing money. This is critical for cot cutting and pricing strategy decisions
+/
+----4) HOW DOES DISCOUNT AFFECT PROFIT ?
+
+SELECT
+CASE
+WHEN DISCOUNT = 0 THEN 'NO DISCOUNT'
+WHEN DISCOUNT <= 0.20 THEN '0-20 %'
+WHEN DISCOUNT <= 0.40 THEN '20-40%'
+ELSE '40-80%'
+END AS DISCOUNT_BAND,
+COUNT(*) AS TOTAL_ORDERS,
+ROUND(AVG(PROFIT),2) AS AVG_PROFIT
+FROM RETAIL_DATA
+GROUP BY DISCOUNT_BAND
+ORDER BY AVG_PROFIT
+---- Analyze whether giving higher discounts leads to power profit or actual losses
+---- this helps the business set a smarter discounting policy.
+/
+----5) WHICH ARE THE TOP CITIES BY TOTAL SALES ?
+
+SELECT
+city, 
+state, 
+ROUND(SUM(sales), 2) AS Total_Sales,
+ROUND(SUM(profit), 2) AS Total_Profit
+FROM 
+RETAIL_DATA
+GROUP BY 
+city, state
+ORDER BY 
+Total_Sales DESC
+----- Identifies the highest revenue cities to help the business focus its marketing,sales team efforts on key markets
+/
+----- 6) WHICH SHIP MODE IS MOST PREFERRED BY EACH CUSTOMER SEGMENT ?
+SELECT
+SEGMENT,
+SHIP_MODE,
+COUNT(*) AS TOTAL_ORDERS
+FROM RETAIL_DATA
+GROUP BY SEGMENT, SHIP_MODE
+ORDER BY SEGMENT, TOTAL_ORDERS DESC
+----- All 3 segments overwhelmingly prefer Standard Class shipping. Same Day is the least used. 
+----- This means the business can negotiate better rates with Standard Class carriers as it drives the bulk of shipments
+/
+----- 7) WHICH SUBCATEGORIES ARE MOST PROFITABLE ?
+
+SELECT
+CATEGORY,
+SUB_CATEGORY,
+ROUND(SUM(SALES)) AS TOTAL_SALES,
+ROUND(SUM(PROFIT)) AS TOTAL_PROFIT,
+ROUND(SUM(PROFIT)/ SUM(SALES) *100.2) AS MARGIN_PCT
+FROM RETAIL_DATA
+GROUP BY SUB_CATEGORY, CATEGORY
+ORDER BY TOTAL_PROFIT DESC
+-----  Copiers have the highest profit ($55K) and Paper has the best margin at 43.4%. 
+----- All top 5 profitable sub-categories are from Technology and Office Supplies — not a single Furniture product appears
+/
+----- 8) WHICH CUSTOMER SEGMENT CONTRIBUTES THE MOST TO REVENUE ?
+
+SELECT
+SEGMENT,
+COUNT(*) AS TOTAL_ORDERS,
+ROUND(SUM(SALES)) AS TOTAL_SALES,
+ROUND(SUM(PROFIT)) AS TOTAL_PROFIT,
+ROUND(SUM(SALES) * 100.0 / SUM(SUM(SALES)) OVER (), 1) AS SALES_PCT
+FROM RETAIL_DATA
+GROUP BY SEGMENT
+ORDER BY TOTAL_SALES DESC
+----- Consumer segment drives 50.6% of total sales — half the business! Corporate is second at 30.7%. 
+----- However, per-order profit is worth investigating since Home Office has fewer orders but still contributes $60K profit
+/
+----- 9) WHICH STATES HAVE THE HIGHEST LOSSES ?
+
+SELECT
+STATE,
+ROUND(SUM(SALES)) AS TOTAL_SALES,
+ROUND(SUM(PROFIT)) AS TOTAL_PROFIT
+FROM RETAIL_DATA
+GROUP BY STATE
+ORDER BY TOTAL_PROFIT ASC
+---- Texas is the worst-performing state with -$25,729 loss on $170K in sales. 
+---- These 5 states are generating significant revenue but losing money — likely due to high discounts or expensive shipping costs in those regions
+/
+----- 10) DOES HIGHER DISCOUNT ALWAYS MEAN MORE SALES QUANTITY ? 
+
+SELECT
+CASE
+WHEN DISCOUNT = 0 THEN 'NO DISCOUNT'  
+WHEN DISCOUNT <= 0.20 THEN '0-20 %'
+WHEN DISCOUNT <= 0.40 THEN '20-40 %'
+ELSE '40-80 %'
+END AS "DISCOUNT BAND",  
+ROUND(AVG(QUANTITY)) AS AVG_QUANTITY,
+ROUND(AVG(PROFIT)) AS AVG_PROFIT,
+COUNT(*) AS TOTAL_ORDERS  
+FROM RETAIL_DATA
+GROUP BY 
+CASE
+WHEN DISCOUNT = 0 THEN 'NO DISCOUNT'
+WHEN DISCOUNT <= 0.20 THEN '0-20 %'
+WHEN DISCOUNT <= 0.40 THEN '20-40 %'
+ELSE '40-80 %'
+END
+ORDER BY AVG_QUANTITY DESC
+-----  Discount-Profit correlation = -0.219 (negative). 
+----- Higher discounts barely increase quantity(3.76 vs 3.91) but cause massive profit loss. 
+----- Discounts are NOT driving meaningful volume — they are just destroying margins
+/
+
+
+
